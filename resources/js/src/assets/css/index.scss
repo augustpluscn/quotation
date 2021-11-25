@@ -1,0 +1,43 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+}
+
+.van-list {
+    >div:nth-child(even) {
+        background: #eee;
+    }
+
+    >div.van-list__finished-text {
+        background: #fff !important;
+    }
+
+    .van-row {
+        padding: 0 15px;
+        margin: 10px 0;
+    }
+}
+
+.bar-title {
+    margin: 0;
+    padding: 5px 16px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.upload {
+    padding: 10px 16px;
+}
+
+.plus-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.right {
+    text-align: right;
+}
