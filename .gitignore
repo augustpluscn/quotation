@@ -1,0 +1,23 @@
+/node_modules
+/public/hot
+/public/storage
+/public/uploads
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+.DS_Store
+deploy.php
+resources/js/node_modules
+
+# 不保存打包之后的前端页面
+/public/js
+/public/css
+/public/img
+/resources/views/app.blade.php
