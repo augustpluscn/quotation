@@ -24,9 +24,8 @@ class CalculateController extends Controller
         $this->eleArr = $detailArr;
 
         $res = $this->rule($this->quotation->报价模板);
-        dd($res);
         return $this->success([
-            'val' => $res,
+            'res' => $res,
         ]);
     }
 

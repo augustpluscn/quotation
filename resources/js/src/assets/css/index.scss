@@ -5,6 +5,14 @@
     color: #2c3e50;
 }
 
+.van-nav-bar {
+    background-color: #44b3e9 !important;
+}
+
+.van-nav-bar__title {
+    color: #fff !important;
+}
+
 .van-list {
     >div:nth-child(even) {
         background: #eee;

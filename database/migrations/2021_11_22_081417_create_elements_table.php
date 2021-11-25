@@ -16,6 +16,12 @@ class CreateElementsTable extends Migration
         Schema::create('elements', function (Blueprint $table) {
             $table->string('编号')->comment('编号');
             $table->string('名称')->comment('名称');
+            $table->integer('显示')->default(1)->comment('显示');
+            $table->integer('类型')->default(1)->comment('类型(1.输入框,2.字典)');
+            $table->string('类型')->nullable()->comment('类型');
+            $table->string('默认值')->nullable()->comment('默认值');
+            $table->integer('排序')->default(999)->comment('排序');
+
             $table->timestamps();
             $table->primary('编号');
 

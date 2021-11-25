@@ -19,6 +19,10 @@ Route::namespace ('App\Http\Controllers\Api')->group(function () {
 
     //计算
     Route::any('t', 'CalculateController@compute');
+    //规则清单
+    Route::any('rule', 'RuleController@list');
+    //元素
+    Route::any('element', 'ElementController@items');
 
 });
 
@@ -30,5 +34,4 @@ Route::namespace ('App\Http\Controllers\Api')->prefix('auth')->group(function ()
 Route::namespace ('App\Http\Controllers\Api')->middleware(['refresh.token'])->group(function () {
     //数据字典
     Route::any('dd', 'DdController@getDd');
-
 });
