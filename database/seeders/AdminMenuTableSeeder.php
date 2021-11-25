@@ -125,5 +125,6 @@ class AdminMenuTableSeeder extends Seeder
             ),
         ));
         
+        
     }
 }
