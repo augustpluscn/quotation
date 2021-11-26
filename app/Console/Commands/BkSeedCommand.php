@@ -40,6 +40,14 @@ class BkSeedCommand extends Command
     {
         $tables = [
             'admin_menu',
+            'rules',
+            'rule_details',
+            'strategys',
+            'strategy_details',
+            'elements',
+            'quotations',
+            'quotation_details',
+            'quotation_items',
         ];
         $tableStr = implode(',', $tables);
         $command = "iseed $tableStr --force";

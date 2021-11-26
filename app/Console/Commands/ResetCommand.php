@@ -54,11 +54,7 @@ class ResetCommand extends Command
     {
         $this->call('migrate:fresh');
 
-        $userModel = config('admin.database.users_model');
+        $this->call('db:seed', ['--class' => DatabaseSeeder::class]);
 
-        if ($userModel::count() == 0) {
-            $this->call('db:seed', ['--class' => AdminTablesSeeder::class]);
-            $this->call('db:seed', ['--class' => DatabaseSeeder::class]);
-        }
     }
 }

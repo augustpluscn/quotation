@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(AdminMenuTableSeeder::class);
         $this->call(RulesTableSeeder::class);
         $this->call(RuleDetailsTableSeeder::class);
         $this->call(StrategysTableSeeder::class);
