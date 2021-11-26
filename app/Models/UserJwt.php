@@ -11,6 +11,10 @@ class UserJwt extends Authenticatable implements JWTSubject
     use Notifiable;
     protected $table = 'wxBindUser';
 
+    protected $primaryKey = 'openid';
+    protected $keyType = 'string';
+    
+
     /**
      * The attributes that are mass assignable.
      *
