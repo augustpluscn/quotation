@@ -8,7 +8,7 @@
 export default {
   name: "App",
   created: function () {
-    this.$store.dispatch("dd/setDd");
+    // this.$store.dispatch("dd/setDd");
   },
 };
 </script>

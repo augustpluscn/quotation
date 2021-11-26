@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class UserJwt extends Authenticatable implements JWTSubject
 {
     use Notifiable;
-    protected $table = 'admin_users';
+    protected $table = 'wxBindUser';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,7 @@ class UserJwt extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'erpPwd',
     ];
 
     /**

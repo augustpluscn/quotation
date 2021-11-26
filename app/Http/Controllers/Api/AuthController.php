@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api;
 use App\Models\UserJwt;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends Controller
@@ -17,16 +16,21 @@ class AuthController extends Controller
      */
     public function login()
     {
+        $miyao = request()->input('miyao');
         $username = request()->input('username');
         $password = request()->input('password');
 
-        if (!$username || !$password) {
-            return $this->failed('账号密码不能为空');
+        if (!$miyao || !$username || !$password) {
+            return $this->failed('秘钥账号密码不能为空');
         }
 
-        $user = UserJwt::where('username', $username)->first();
-        if (!$user || !Hash::check($password, $user->password)) {
-            return $this->failed('账号密码错误');
+        $user = UserJwt::where([
+            ['miyao', $miyao],
+            ['erpUser', $username],
+            ['erpPwd', $password],
+        ])->first();
+        if (!$user) {
+            return $this->failed('秘钥账号密码错误');
         }
 
         $token = auth('api')->login($user);
