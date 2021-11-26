@@ -36,7 +36,7 @@ class ChangeDB extends BaseMiddleware
         \Config::set('database.connections.cus.username', $conn->uid);
         \Config::set('database.connections.cus.password', $conn->pwd);
 
-        DB::purge('cus');
+        // DB::purge('cus');
 
         return $next($request);
 

@@ -22,7 +22,7 @@
         @cancel="rule.show = false" />
     </van-popup>
     <van-field required v-for="(item,index) in eleItem" :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" />
-    <van-button type="primary" @click="logout">主要按钮</van-button>
+    <!-- <van-button type="primary" @click="logout">主要按钮</van-button> -->
   </div>
 </template>
 
