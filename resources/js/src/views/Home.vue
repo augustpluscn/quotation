@@ -21,7 +21,18 @@
         @confirm="onConfirmRule"
         @cancel="rule.show = false" />
     </van-popup>
-    <van-field required v-for="(item,index) in eleItem" :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" />
+    <!-- <van-field required v-for="(item,index) in eleItem" :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" /> -->
+    <template v-for="(item,index) in eleItem">
+      <van-field v-if="item.类型==1" required :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" />
+      <div :key='index' v-if="item.类型==2 && Object.prototype.hasOwnProperty.call(eveSelect, item.编号)" class="van-cell van-cell--required van-field">
+        <div class="van-cell__title van-field__label"><span>{{item.名称}}</span></div>
+        <div class="van-cell__value van-field__value">
+          <div class="van-field__body">
+            <v-select :options="eveSelect[item.编号]" v-model="eleVal[item.编号]" class="select"></v-select>
+          </div>
+        </div>
+      </div>
+    </template>
     <div class="preview" v-if="eleItem.length>0">
       <van-button type="primary" @click="preview" size="small">预览</van-button>
     </div>
@@ -59,6 +70,7 @@ export default {
     return {
       eleItem: [],
       eleVal: {},
+      eveSelect: {},
       rule: {
         list: [],
         val: {},
@@ -113,9 +125,7 @@ export default {
       Ele.item(this.rule.val.元素).then((res) => {
         this.eleItem = res.data.list;
         this.eleVal = {};
-        // this.eleItem.map((item) => {
-        //   this.eleVal[item.编号] = item.默认值;
-        // });
+        this.eveSelect = res.data.dd;
       });
     },
     preview() {
@@ -132,6 +142,12 @@ export default {
 
 <style lang="scss">
 .home {
+  .select {
+    width: 100%;
+  }
+  .vs__dropdown-toggle {
+    border: none !important;
+  }
   .preview {
     text-align: center;
   }

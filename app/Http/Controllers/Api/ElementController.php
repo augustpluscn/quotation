@@ -15,8 +15,18 @@ class ElementController extends Controller
         }
         $list = DB::connection('cus')->table('elements')->whereIn('编号', $itemArr)->get();
 
+        //DB::connection('cus')->table('basicInfo')->where('kind', $kind)->select('BID', 'content', 'remark')->get();
+        $ddArr = [];
+        //获取字典
+        foreach ($list as $item) {
+            if ($item->类型 == 2) {
+                $ddArr[$item->编号] = DB::connection('cus')->table('basicInfo')->where('kind', $item->来源)->selectRaw('content as label')->pluck('label')->toArray();
+            }
+        }
+
         return $this->success([
             'list' => $list,
+            'dd' => $ddArr,
         ]);
     }
 }
