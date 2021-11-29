@@ -27,10 +27,12 @@ Route::namespace ('App\Http\Controllers\Api')->middleware(['refresh.token', 'cha
     //数据字典
     Route::any('dd', 'DdController@getDd');
     //计算
-    Route::any('t', 'CalculateController@compute');
+    Route::any('compute', 'CalculateController@compute');
     //规则清单
     Route::any('rule', 'RuleController@list');
     //元素
     Route::any('element', 'ElementController@items');
 
+    //加工方式
+    Route::any('erpdd', 'DdController@getErpDd');
 });

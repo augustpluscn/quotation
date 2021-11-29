@@ -15,7 +15,7 @@ class CreateRulesTable extends Migration
     {
         Schema::create('rules', function (Blueprint $table) {
             $table->string('编号')->comment('编号');
-            $table->integer('分类')->comment('分类')->nullable();
+            $table->string('分类')->comment('分类')->nullable();
             $table->string('成本名称')->comment('成本名称')->nullable();
             $table->string('公式')->comment('公式')->nullable();
             $table->string('说明')->comment('说明')->nullable();

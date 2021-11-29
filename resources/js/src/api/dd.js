@@ -2,7 +2,7 @@
 import http from '@/utils/http'
 
 export default {
-  item: (item) => {
-    return http.get('element', { item })
+  erpDd: (kind) => {
+    return http.get('erpdd', { kind }, true)
   }
 }

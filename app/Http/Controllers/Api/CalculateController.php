@@ -8,22 +8,13 @@ class CalculateController extends Controller
 {
     private $split = "/[\+\-\*\/\(\)]/";
     private $eleArr = [];
-    private $quotation;
     public function compute()
     {
-        //查询规则
-        $id = '00002';
+        $rule = request()->input('rule');
+        $eles = request()->input('eles');
 
-        $this->quotation = DB::table('quotations')->where('单号', $id)->first();
-        //元素
-        $details = DB::table('quotation_details')->where('报价单号', $this->quotation->单号)->get();
-        $detailArr = [];
-        foreach ($details as $item) {
-            $detailArr[$item->元素编号] = $item->值;
-        }
-        $this->eleArr = $detailArr;
-
-        $res = $this->rule($this->quotation->报价模板);
+        $this->eleArr = $eles;
+        $res = $this->rule($rule);
         return $this->success([
             'res' => $res,
         ]);
@@ -32,8 +23,8 @@ class CalculateController extends Controller
     public function rule($rule)
     {
         $resArr = [];
-        $rules = DB::table('rules')->where('编号', $rule)->first();
-        $ruleDetails = DB::table('rule_details')->where('规则编号', $rule)->get();
+        $rules = DB::connection('cus')->table('rules')->where('编号', $rule)->first();
+        $ruleDetails = DB::connection('cus')->table('rule_details')->where('规则编号', $rule)->get();
 
         $formula = $rules->公式;
         $elements = preg_split($this->split, $formula);
@@ -69,7 +60,6 @@ class CalculateController extends Controller
         $result = $this->c($eleVals, $formula);
 
         array_unshift($resArr, [
-            '报价单号' => $this->quotation->单号,
             '成本编号' => $rule,
             '成本名称' => $rules->成本名称,
             '公式' => $rules->公式,
@@ -83,8 +73,8 @@ class CalculateController extends Controller
     public function strategy($strategy)
     {
         $formula = 1;
-        $strategyInfo = DB::table('strategys')->where('编号', $strategy)->first();
-        $strategyDetail = DB::table('strategy_details')->where('策略编号', $strategy)->get();
+        $strategyInfo = DB::connection('cus')->table('strategys')->where('编号', $strategy)->first();
+        $strategyDetail = DB::connection('cus')->table('strategy_details')->where('策略编号', $strategy)->get();
         foreach ($strategyDetail as $item) {
             if ($this->compare($item->条件)) {
                 $formula = $item->数值;
@@ -97,7 +87,6 @@ class CalculateController extends Controller
         return [
             'res' => $val,
             'resArr' => [
-                '报价单号' => $this->quotation->单号,
                 '成本编号' => $strategy,
                 '成本名称' => $strategyInfo->名称,
                 '金额' => $val,

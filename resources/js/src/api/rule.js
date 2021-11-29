@@ -2,7 +2,7 @@
 import http from '@/utils/http'
 
 export default {
-  list: () => {
-    return http.get('rule')
+  list: (kind) => {
+    return http.get('rule', { kind }, true)
   }
 }
