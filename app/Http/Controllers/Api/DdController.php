@@ -27,4 +27,13 @@ class DdController extends Controller
             'list' => $list,
         ]);
     }
+
+    public function getCompany()
+    {
+        $list = DB::connection('cus')->table('Company')->select('CompName')->pluck('CompName')->toArray();
+        return $this->success([
+            'list' => $list,
+        ]);
+
+    }
 }

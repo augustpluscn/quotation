@@ -26,6 +26,8 @@ Route::namespace ('App\Http\Controllers\Api')->prefix('auth')->group(function ()
 Route::namespace ('App\Http\Controllers\Api')->middleware(['refresh.token', 'change.db'])->group(function () {
     //数据字典
     Route::any('dd', 'DdController@getDd');
+    //公司
+    Route::any('company', 'DdController@getCompany');
     //计算
     Route::any('compute', 'CalculateController@compute');
     //规则清单

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-nav-bar title="道具报价" />
+    <van-nav-bar title="刀具报价" fixed='true' />
     <van-field required readonly clickable :value="jgfs.val.content" name="picker" label="加工方式" placeholder="加工方式" @click="jgfs.show = true" />
     <van-popup v-model="jgfs.show" position="bottom">
       <van-picker
@@ -54,7 +54,21 @@
         </div>
       </div>
     </div>
-
+    <div v-if="res" class="cus">
+      <div class="van-cell van-cell--required van-field">
+        <div class="van-cell__title van-field__label"><span>客户</span></div>
+        <div class="van-cell__value van-field__value">
+          <div class="van-field__body">
+            <v-select :options="company" v-model="companyVal" class="select"></v-select>
+          </div>
+        </div>
+      </div>
+      <van-field required v-model="confirmPrice" type="number" label="最终报价" />
+      <van-field v-model="remark" label="备注" />
+      <div class="save">
+        <van-button type="primary" @click="preview">保存</van-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,11 +77,13 @@ import Rule from "@/api/rule.js";
 import Ele from "@/api/element.js";
 import Dd from "@/api/dd.js";
 import Quotation from "@/api/quotation.js";
-// import { Toast } from "vant";
+import { Dialog } from "vant";
 export default {
   name: "Home",
   data() {
     return {
+      company: [],
+      companyVal: "",
       eleItem: [],
       eleVal: {},
       eveSelect: {},
@@ -82,6 +98,8 @@ export default {
         show: false,
       },
       res: false,
+      confirmPrice: 0,
+      remark: "",
     };
   },
   components: {},
@@ -94,6 +112,11 @@ export default {
       };
       this.eleItem = [];
       this.res = false;
+    },
+    getCompany() {
+      Dd.company().then((res) => {
+        this.company = res.data.list;
+      });
     },
     getJgfs() {
       Dd.erpDd("报价制作类别").then((res) => {
@@ -129,27 +152,41 @@ export default {
       });
     },
     preview() {
+      if (Object.keys(this.eleVal).length < this.eleItem.length) {
+        Dialog.alert({
+          title: "警告",
+          message: "请填写完整资料",
+        });
+        return;
+      }
       Quotation.compute(this.rule.val.编号, this.eleVal).then((res) => {
         this.res = res.data.res;
+        this.confirmPrice = Math.round(this.res.res * 100) / 100;
       });
     },
   },
   created() {
     this.getJgfs();
+    this.getCompany();
   },
 };
 </script>
 
 <style lang="scss">
 .home {
+  padding: 46px 0 20px;
   .select {
     width: 100%;
   }
   .vs__dropdown-toggle {
     border: none !important;
   }
-  .preview {
+  .preview,
+  .save {
     text-align: center;
+  }
+  .save {
+    margin-bottom: 20px;
   }
   .detail {
     .title {
