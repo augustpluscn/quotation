@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-nav-bar title="刀具报价" fixed='true' />
+    <van-nav-bar title="刀具报价" fixed />
     <van-field required readonly clickable :value="jgfs.val.content" name="picker" label="加工方式" placeholder="加工方式" @click="jgfs.show = true" />
     <van-popup v-model="jgfs.show" position="bottom">
       <van-picker
@@ -66,7 +66,7 @@
       <van-field required v-model="confirmPrice" type="number" label="最终报价" />
       <van-field v-model="remark" label="备注" />
       <div class="save">
-        <van-button type="primary" @click="preview">保存</van-button>
+        <van-button type="primary" @click="save">保存</van-button>
       </div>
     </div>
   </div>
@@ -100,6 +100,7 @@ export default {
       res: false,
       confirmPrice: 0,
       remark: "",
+      saved: false,
     };
   },
   components: {},
@@ -112,6 +113,8 @@ export default {
       };
       this.eleItem = [];
       this.res = false;
+      this.companyVal = "";
+      this.saved = false;
     },
     getCompany() {
       Dd.company().then((res) => {
@@ -145,6 +148,8 @@ export default {
     },
     getElement() {
       this.res = false;
+      this.companyVal = "";
+      this.saved = false;
       Ele.item(this.rule.val.元素).then((res) => {
         this.eleItem = res.data.list;
         this.eleVal = {};
@@ -162,6 +167,43 @@ export default {
       Quotation.compute(this.rule.val.编号, this.eleVal).then((res) => {
         this.res = res.data.res;
         this.confirmPrice = Math.round(this.res.res * 100) / 100;
+        this.saved = false;
+      });
+    },
+    save() {
+      if (this.saved) {
+        Dialog.alert({
+          title: "警告",
+          message: "已经保存!",
+        });
+        return;
+      }
+      if (this.companyVal == "") {
+        Dialog.alert({
+          title: "警告",
+          message: "请选择客户",
+        });
+        return;
+      }
+      if (this.res == false) {
+        Dialog.alert({
+          title: "警告",
+          message: "请先预览结果",
+        });
+        return;
+      }
+      Quotation.add(
+        this.rule.val.编号,
+        this.companyVal,
+        this.eleVal,
+        this.res,
+        this.remark
+      ).then((res) => {
+        Dialog.alert({
+          title: "提示",
+          message: res.data.msg,
+        });
+        this.saved = true;
       });
     },
   },

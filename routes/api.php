@@ -37,4 +37,6 @@ Route::namespace ('App\Http\Controllers\Api')->middleware(['refresh.token', 'cha
 
     //加工方式
     Route::any('erpdd', 'DdController@getErpDd');
+    //保存
+    Route::any('quoadd', 'QuotationController@add');
 });

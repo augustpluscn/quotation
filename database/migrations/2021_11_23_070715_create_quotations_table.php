@@ -16,7 +16,7 @@ class CreateQuotationsTable extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->string('单号');
             $table->date('日期')->nullable();
-            $table->integer('类型')->nullable();
+            $table->string('类型')->nullable();
             $table->string('客户')->nullable();
             $table->string('报价模板');
             $table->string('说明')->nullable();

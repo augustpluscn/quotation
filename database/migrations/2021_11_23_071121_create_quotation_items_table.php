@@ -18,8 +18,8 @@ class CreateQuotationItemsTable extends Migration
             $table->string('序号')->comment('序号');
             $table->string('成本编号');
             $table->string('成本名称');
-            $table->string('公式')->comment('公式');
-            $table->string('说明')->comment('说明');
+            $table->string('公式')->comment('公式')->nullable();
+            $table->string('说明')->comment('说明')->nullable();
             $table->string('金额');
 
             $table->timestamps();
