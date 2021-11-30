@@ -107,7 +107,7 @@ class CalculateController extends Controller
     public function compare($formula)
     {
         foreach ($this->eleArr as $index => $item) {
-            $formula = str_replace($index, $item, $formula);
+            $formula = str_replace($index, "'$item'", $formula);
         }
         $result = eval("return ($formula); ");
         return $result;
