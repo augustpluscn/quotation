@@ -164,6 +164,24 @@ export default {
         });
         return;
       }
+      let err = false;
+      for (let item in this.eleVal) {
+        if (
+          this.eleVal[item] == "" ||
+          this.eleVal[item] == 0 ||
+          this.eleVal[item] == null
+        ) {
+          err = true;
+          break;
+        }
+      }
+      if (err) {
+        Dialog.alert({
+          title: "警告",
+          message: "请填写完整资料",
+        });
+        return;
+      }
       Quotation.compute(this.rule.val.编号, this.eleVal).then((res) => {
         this.res = res.data.res;
         this.confirmPrice = Math.round(this.res.res * 100) / 100;
