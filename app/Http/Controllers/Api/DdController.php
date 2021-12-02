@@ -30,7 +30,7 @@ class DdController extends Controller
 
     public function getCompany()
     {
-        $list = DB::connection('cus')->table('Company')->select('CompName')->pluck('CompName')->toArray();
+        $list = DB::connection('cus')->table('Company')->where('type', 1)->select('CompName')->pluck('CompName')->toArray();
         return $this->success([
             'list' => $list,
         ]);

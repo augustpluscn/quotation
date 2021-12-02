@@ -40,13 +40,28 @@
         </div>
       </div>
     </template>
-    <div class="preview" v-if="eleItem.length>0">
-      <van-button type="primary" @click="preview" size="small">预览</van-button>
-    </div>
+    <template v-if="eleItem.length>0">
+      <div class="van-cell van-cell--required van-field">
+        <div class="van-cell__title van-field__label"><span>税率</span></div>
+        <div class="van-cell__value van-field__value">
+          <div class="van-field__body">
+            <v-select :options="taxArr" v-model="tax" class="select"></v-select>
+          </div>
+        </div>
+      </div>
+      <div class="preview">
+        <van-button type="primary" @click="preview" size="small">预览</van-button>
+      </div>
+    </template>
     <div v-if="res" class="detail">
       <div class="title">报价详情</div>
       <div class="item">
-        <div>总价:{{Math.round(res.res*100)/100}}</div>
+        <div>
+          <div>总价:{{Math.round(res.res*100)/100}}</div>
+          <div>单价:{{unitPrice}}</div>
+          <div>含税:{{taxPrice}}</div>
+          <div>税率:{{tax.label || '0%'}}</div>
+        </div>
         <div v-for="(item,index) in res.resArr" :key='index'>
           <div>
             <div>项目:{{item.成本名称}}</div>
@@ -89,6 +104,8 @@ export default {
   name: "Home",
   data() {
     return {
+      taxArr: [],
+      tax: null,
       company: [],
       companyVal: "",
       eleItem: [],
@@ -111,6 +128,31 @@ export default {
     };
   },
   components: {},
+  computed: {
+    unitPrice() {
+      let unitPrice = 0;
+      if (this.res) {
+        if (Object.prototype.hasOwnProperty.call(this.eleVal, "Y0001")) {
+          let qty = this.eleVal.Y0001 || 1;
+          unitPrice = this.res.res / qty;
+        } else {
+          unitPrice = this.res.res;
+        }
+      }
+      return Math.round(unitPrice * 100) / 100;
+    },
+    taxPrice() {
+      let price = 0;
+      if (this.res) {
+        if (this.tax) {
+          price = (1 + this.tax.code) * this.res.res;
+        } else {
+          price = this.res.res;
+        }
+      }
+      return Math.round(price * 100) / 100;
+    },
+  },
   methods: {
     clear() {
       this.rule = {
@@ -122,6 +164,18 @@ export default {
       this.res = false;
       this.companyVal = "";
       this.saved = false;
+    },
+    getTax() {
+      Dd.erpDd("税率").then((res) => {
+        let arr = [];
+        res.data.list.forEach((element) => {
+          arr.push({
+            label: element.content,
+            code: element.BID,
+          });
+        });
+        this.taxArr = arr;
+      });
     },
     getCompany() {
       Dd.company().then((res) => {
@@ -187,7 +241,7 @@ export default {
           break;
         }
       }
-      if (err) {
+      if (err || this.tax == null) {
         Dialog.alert({
           title: "警告",
           message: "请填写完整资料",
@@ -196,7 +250,7 @@ export default {
       }
       Quotation.compute(this.rule.val.编号, this.eleVal).then((res) => {
         this.res = res.data.res;
-        this.confirmPrice = Math.round(this.res.res * 100) / 100;
+        this.confirmPrice = this.taxPrice;
         this.saved = false;
       });
     },
@@ -227,7 +281,8 @@ export default {
         this.companyVal,
         this.eleVal,
         this.res,
-        this.remark
+        this.remark,
+        this.tax.code
       ).then((res) => {
         Dialog.alert({
           title: "提示",
@@ -239,6 +294,7 @@ export default {
   },
   created() {
     this.getJgfs();
+    this.getTax();
     this.getCompany();
   },
 };
@@ -276,6 +332,11 @@ export default {
       > div:first-child {
         color: #f95;
         font-size: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        > div {
+          width: 50%;
+        }
       }
       > div:not(:first-child) {
         > div:first-child {

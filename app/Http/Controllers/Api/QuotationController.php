@@ -13,24 +13,17 @@ class QuotationController extends Controller
         $eles = request()->input('eles');
         $res = request()->input('res');
         $remark = request()->input('remark');
+        $tax = request()->input('tax');
 
         $user = auth('api')->user();
-
         $rules = DB::connection('cus')->table('rules')->where('编号', $rule)->first();
         $quotationId = getSerialByPre('quotations', '单号');
-        DB::connection('cus')->table('quotations')->insert(
-            [
-                '单号' => $quotationId,
-                '日期' => date('Y-m-d'),
-                '类型' => $rules->分类,
-                '客户' => $cus,
-                '报价模板' => $rule,
-                '说明' => $remark,
-                '公式' => $rules->公式,
-                '金额' => $res['res'],
-                '报价人' => $user->erpUser,
-            ]
-        );
+
+        if (array_key_exists('Y0001', $eles)) {
+            $qty = $eles['Y0001'];
+        } else {
+            $qty = 1;
+        }
 
         $detail = [];
         $n = 1;
@@ -43,7 +36,6 @@ class QuotationController extends Controller
             ];
             $n++;
         }
-        DB::connection('cus')->table('quotation_details')->insert($detail);
 
         $items = [];
         $n = 1;
@@ -59,6 +51,25 @@ class QuotationController extends Controller
             ];
             $n++;
         }
+
+        DB::connection('cus')->table('quotations')->insert(
+            [
+                '单号' => $quotationId,
+                '日期' => date('Y-m-d'),
+                '类型' => $rules->分类,
+                '客户' => $cus,
+                '报价模板' => $rule,
+                '说明' => $remark,
+                '公式' => $rules->公式,
+                '数量' => $qty,
+                '单价' => round($res['res'] / $qty, 2),
+                '金额' => $res['res'],
+                '税率' => $tax,
+                '报价人' => $user->erpUser,
+            ]
+        );
+        DB::connection('cus')->table('quotation_details')->insert($detail);
+
         DB::connection('cus')->table('quotation_items')->insert($items);
 
         return $this->success([

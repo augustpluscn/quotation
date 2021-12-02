@@ -24,6 +24,7 @@ class CreateQuotationsTable extends Migration
             $table->decimal('数量')->nullable();
             $table->decimal('单价')->nullable();
             $table->decimal('金额')->nullable();
+            $table->decimal('税率')->nullable();
             $table->decimal('报价人')->nullable();
             $table->timestamps();
             $table->primary('单号');
