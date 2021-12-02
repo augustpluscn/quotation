@@ -1,6 +1,8 @@
 <template>
   <div class="number">
-    <van-field :required='required' v-model="val" type="number" :label="lavel" />
+    <van-icon name="plus" />
+    <van-field :required='required' :value="val" type="number" :label="label" @input="valChange" />
+    <van-icon name="minus" />
   </div>
 </template>
 
@@ -8,17 +10,27 @@
 export default {
   name: "Number",
   props: {
+    id: {
+      type: String,
+    },
     required: {
       type: Boolean,
       default: false,
     },
-    lavel: {
+    label: {
       type: String,
       default: "标题",
     },
-    val: 0,
+    val: {
+      type: [Number, String],
+      default: "",
+    },
   },
   computed: {},
-  methods: {},
+  methods: {
+    valChange(val) {
+      this.$emit("valChange", this.id, val);
+    },
+  },
 };
 </script>

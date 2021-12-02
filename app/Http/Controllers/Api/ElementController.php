@@ -13,7 +13,7 @@ class ElementController extends Controller
         if (count($itemArr) == 0) {
             return $this->failed('元素不能为空');
         }
-        $list = DB::connection('cus')->table('elements')->whereIn('编号', $itemArr)->get();
+        $list = DB::connection('cus')->table('elements')->whereIn('编号', $itemArr)->orderBy('排序')->orderBy('编号')->get();
 
         //DB::connection('cus')->table('basicInfo')->where('kind', $kind)->select('BID', 'content', 'remark')->get();
         $ddArr = [];
