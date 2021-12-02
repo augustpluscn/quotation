@@ -23,7 +23,13 @@
     </van-popup>
     <!-- <van-field required v-for="(item,index) in eleItem" :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" /> -->
     <template v-for="(item,index) in eleItem">
-      <Num v-if="item.类型==1" :id="item.编号" :required="true" :key='index' :val="eleVal[item.编号]" :label="item.名称" @valChange="valChange" />
+      <div v-if="item.类型==1" :key='index' class="van-cell van-cell--required van-field">
+        <div class="van-cell__title van-field__label"><span>{{item.名称}}</span></div>
+        <div class="van-cell__value van-field__value">
+          <van-stepper v-model="eleVal[item.编号]" input-width="70%" />
+        </div>
+      </div>
+      <!-- <van-stepper v-if="item.类型==1" :key='index' v-model="eleVal[item.编号]" /> -->
       <!-- <van-field v-if="item.类型==1" required :key='index' v-model="eleVal[item.编号]" type="number" :label="item.名称" /> -->
       <div :key='index' v-if="item.类型==2 && Object.prototype.hasOwnProperty.call(eveSelect, item.编号)" class="van-cell van-cell--required van-field">
         <div class="van-cell__title van-field__label"><span>{{item.名称}}</span></div>
@@ -79,7 +85,6 @@ import Ele from "@/api/element.js";
 import Dd from "@/api/dd.js";
 import Quotation from "@/api/quotation.js";
 import { Dialog } from "vant";
-import Num from "@/components/Number.vue";
 export default {
   name: "Home",
   data() {
@@ -105,11 +110,8 @@ export default {
       saved: false,
     };
   },
-  components: { Num },
+  components: {},
   methods: {
-    valChange(key, val) {
-      this.eleVal[key] = val;
-    },
     clear() {
       this.rule = {
         list: [],
@@ -247,6 +249,9 @@ export default {
   padding: 46px 0 20px;
   .select {
     width: 100%;
+  }
+  .van-cell__value {
+    text-align: left !important;
   }
   .vs__dropdown-toggle {
     border: none !important;
