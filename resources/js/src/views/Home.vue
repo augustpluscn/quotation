@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <van-nav-bar title="刀具报价" fixed />
+    <div class="ver">{{version.version}}</div>
     <van-field required readonly clickable :value="jgfs.val.content" name="picker" label="加工方式" placeholder="加工方式" @click="jgfs.show = true" />
     <van-popup v-model="jgfs.show" position="bottom">
       <van-picker
@@ -100,10 +101,12 @@ import Ele from "@/api/element.js";
 import Dd from "@/api/dd.js";
 import Quotation from "@/api/quotation.js";
 import { Dialog } from "vant";
+import version from "@/version.json";
 export default {
   name: "Home",
   data() {
     return {
+      version: { version: "" },
       taxArr: [],
       tax: null,
       company: [],
@@ -293,6 +296,7 @@ export default {
     },
   },
   created() {
+    this.version = version;
     this.getJgfs();
     this.getTax();
     this.getCompany();
@@ -303,6 +307,10 @@ export default {
 <style lang="scss">
 .home {
   padding: 46px 0 20px;
+  .ver {
+    text-align: center;
+    font-size: 10px;
+  }
   .select {
     width: 100%;
   }
