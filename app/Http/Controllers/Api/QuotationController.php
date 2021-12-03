@@ -13,6 +13,7 @@ class QuotationController extends Controller
         $eles = request()->input('eles');
         $res = request()->input('res');
         $remark = request()->input('remark');
+        $price = request()->input('price');
         $tax = request()->input('tax');
 
         $user = auth('api')->user();
@@ -62,8 +63,8 @@ class QuotationController extends Controller
                 '说明' => $remark,
                 '公式' => $rules->公式,
                 '数量' => $qty,
-                '单价' => round($res['res'] / $qty, 2),
-                '金额' => $res['res'],
+                '单价' => round($price / $qty, 2),
+                '金额' => $price,
                 '税率' => $tax,
                 '报价人' => $user->erpUser,
             ]

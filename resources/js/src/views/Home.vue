@@ -148,7 +148,7 @@ export default {
       let price = 0;
       if (this.res) {
         if (this.tax) {
-          price = (1 + this.tax.code) * this.res.res;
+          price = (1 + this.tax.code * 1) * this.res.res;
         } else {
           price = this.res.res;
         }
@@ -285,6 +285,7 @@ export default {
         this.eleVal,
         this.res,
         this.remark,
+        this.confirmPrice,
         this.tax.code
       ).then((res) => {
         Dialog.alert({
