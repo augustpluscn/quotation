@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <van-nav-bar title="刀具报价" fixed />
     <van-nav-bar
       title="刀具报价"
       fixed
