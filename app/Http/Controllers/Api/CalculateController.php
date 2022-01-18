@@ -96,9 +96,30 @@ class CalculateController extends Controller
 
     public function c($eleVals, $formula)
     {
-        foreach ($eleVals as $index => $item) {
-            $formula = str_replace($index, $item, $formula);
+        //排序,字符多的key先替换
+        $keyArr = array_keys($eleVals);
+        $newArr = [];
+        foreach ($keyArr as $value) {
+            $isInsert = 0;
+            for ($i = 0; $i < count($newArr); $i++) {
+                if (strlen($value) >= strlen($newArr[$i])) {
+                    array_splice($newArr, $i, 0, $value);
+                    $isInsert = 1;
+                    break;
+                }
+            }
+            if ($isInsert == 0) {
+                $newArr[] = $value;
+            }
         }
+
+        foreach ($newArr as $key) {
+            $formula = str_replace($key, $eleVals[$key], $formula);
+        }
+
+        // foreach ($eleVals as $index => $item) {
+        //     $formula = str_replace($index, $item, $formula);
+        // }
 
         $result = eval("return $formula; ");
         return $result;
