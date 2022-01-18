@@ -1,6 +1,12 @@
 <template>
   <div class="home">
     <van-nav-bar title="刀具报价" fixed />
+    <van-nav-bar
+      title="刀具报价"
+      fixed
+      :right-text="rightTxt"
+      @click-right="onClickRight" />
+
     <div class="ver">{{version.version}}</div>
     <van-field required readonly clickable :value="jgfs.val.content" name="picker" label="加工方式" placeholder="加工方式" @click="jgfs.show = true" />
     <van-popup v-model="jgfs.show" position="bottom">
@@ -55,25 +61,13 @@
       </div>
     </template>
     <div v-if="res" class="detail">
-      <div class="title">报价详情</div>
+      <div class="title">报价结果</div>
       <div class="item">
         <div>
           <div>总价:{{Math.round(res.res*100)/100}}</div>
           <div>单价:{{unitPrice}}</div>
           <div>含税:{{taxPrice}}</div>
           <div>税率:{{tax.label || '0%'}}</div>
-        </div>
-        <div v-for="(item,index) in res.resArr" :key='index'>
-          <div>
-            <div>项目:{{item.成本名称}}</div>
-            <div>{{Math.round(item.金额*100)/100}}</div>
-          </div>
-          <div v-if="item.公式">
-            公式:{{item.公式}}
-          </div>
-          <div v-if="item.说明">
-            说明:{{item.说明}}
-          </div>
         </div>
       </div>
     </div>
@@ -92,6 +86,31 @@
         <van-button type="primary" @click="save">保存</van-button>
       </div>
     </div>
+    <van-popup v-model="show" round closeable :style="{ width: '90%' }">
+      <div v-if="res" class="detail">
+        <div class="title">报价详情</div>
+        <div class="item">
+          <div>
+            <div>总价:{{Math.round(res.res*100)/100}}</div>
+            <div>单价:{{unitPrice}}</div>
+            <div>含税:{{taxPrice}}</div>
+            <div>税率:{{tax.label || '0%'}}</div>
+          </div>
+          <div v-for="(item,index) in res.resArr" :key='index'>
+            <div>
+              <div>项目:{{item.成本名称}}</div>
+              <div>{{Math.round(item.金额*100)/100}}</div>
+            </div>
+            <div v-if="item.公式">
+              公式:{{item.公式}}
+            </div>
+            <div v-if="item.说明">
+              说明:{{item.说明}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -128,22 +147,27 @@ export default {
       confirmPrice: 0,
       remark: "",
       saved: false,
+      show: false,
+      unitPrice: 0,
     };
   },
   components: {},
   computed: {
-    unitPrice() {
-      let unitPrice = 0;
-      if (this.res) {
-        if (Object.prototype.hasOwnProperty.call(this.eleVal, "Y0001")) {
-          let qty = this.eleVal.Y0001 || 1;
-          unitPrice = this.res.res / qty;
-        } else {
-          unitPrice = this.res.res;
-        }
-      }
-      return Math.round(unitPrice * 100) / 100;
+    rightTxt() {
+      return this.res ? "详情" : "";
     },
+    // unitPrice() {
+    //   let unitPrice = 0;
+    //   if (this.res) {
+    //     if (Object.prototype.hasOwnProperty.call(this.eleVal, "Y0001")) {
+    //       let qty = this.eleVal.Y0001 || 1;
+    //       unitPrice = this.res.res / qty;
+    //     } else {
+    //       unitPrice = this.res.res;
+    //     }
+    //   }
+    //   return Math.round(unitPrice * 100) / 100;
+    // },
     taxPrice() {
       let price = 0;
       if (this.res) {
@@ -157,6 +181,11 @@ export default {
     },
   },
   methods: {
+    onClickRight() {
+      if (this.res) {
+        this.show = true;
+      }
+    },
     clear() {
       this.rule = {
         list: [],
@@ -254,6 +283,8 @@ export default {
       Quotation.compute(this.rule.val.编号, this.eleVal).then((res) => {
         this.res = res.data.res;
         this.confirmPrice = this.taxPrice;
+        this.unitPrice =
+          Math.round((this.res.res / this.eleVal.Y0001) * 100) / 100;
         this.saved = false;
       });
     },
@@ -328,6 +359,7 @@ export default {
   .save {
     margin-bottom: 20px;
   }
+
   .detail {
     .title {
       text-align: center;
